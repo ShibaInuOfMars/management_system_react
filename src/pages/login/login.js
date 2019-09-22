@@ -10,9 +10,11 @@ import './login.less';
 import loginLogo from './../../static/images/login-logo.jpg';
 
 // antd
-import {Button} from 'antd';
+import {Form, Icon, Input, Button} from 'antd';
 
-export default class Login extends Component {
+let {Item} = Form;
+
+class Login extends Component {
 
     state = {
         particlesParams: {
@@ -134,7 +136,13 @@ export default class Login extends Component {
     };
 
     render() {
-        let {particlesParams} = this.state;
+
+        // 粒子特效参数
+        const {particlesParams} = this.state;
+
+        // 用于和表单进行双向绑定
+        const {getFieldDecorator} = this.props.form;
+
         return (
             <div className="loginWrapper">
                 {/* 粒子特效 */}
@@ -146,10 +154,47 @@ export default class Login extends Component {
                         <span>动感-刷题后台管理系统</span>
                     </div>
                     <div className="loginForm">
-                        <Button>按钮</Button>
+                        <Form className="login-form">
+                            <Item>
+                                {
+                                    getFieldDecorator('account', {
+                                        // 输入的规则，key是固定的
+                                        rules: [
+                                            {required: true, message: '请输入账号！'}
+                                        ]
+                                    })(<Input
+                                        prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
+                                        placeholder="Username"
+                                    />)
+                                }
+                            </Item>
+                            <Item>
+                                {
+                                    getFieldDecorator('password', {
+                                        rules: [
+                                            {required: true, message: '请输入密码！'},
+                                            {min: 5, message: '最少5个字符！'},
+                                            {max: 16, message: '最少16个字符！'}
+                                        ]
+                                    })(<Input
+                                        prefix={<Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>}
+                                        type="password"
+                                        placeholder="Password"
+                                    />)
+                                }
+                            </Item>
+                            <Item>
+                                <Button type="primary" htmlType="submit" className="login-form-button">登录</Button>
+                            </Item>
+                        </Form>
                     </div>
                 </div>
             </div>
         );
     }
-};
+}
+
+// 经 Form.create() 包装过的组件会自带 this.props.form 属性
+export default Form.create({})(Login);
+
+
