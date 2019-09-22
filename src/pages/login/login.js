@@ -9,9 +9,10 @@ import './login.less';
 // 图片（必须先引入才能使用）
 import loginLogo from './../../static/images/login-logo.jpg';
 
-// antd
-import {Form, Icon, Input, Button} from 'antd';
+import {reqLogin} from './../../api/user-api';
 
+// antd
+import {Form, Icon, Input, Button, message} from 'antd';
 let {Item} = Form;
 
 class Login extends Component {
@@ -135,6 +136,26 @@ class Login extends Component {
         }
     };
 
+    // 点击登录按钮触发的函数
+    _handleSubmit = (e) => {
+        e.preventDefault();
+        this.props.form.validateFields(async (err, values) => {
+            if (!err) {
+                // console.log('Received values of form: ', values);
+
+                // 1. 发送登录请求
+                const {account, password} = values;
+                let res = await reqLogin('/login', {account, password});
+                if (res.status === 0) { // 验证成功
+                    // console.log('成功');
+                    // 2. 将数据存储到本地
+                } else { // 验证失败
+                    message.error(res.msg);
+                }
+            }
+        });
+    };
+
     render() {
 
         // 粒子特效参数
@@ -154,7 +175,7 @@ class Login extends Component {
                         <span>动感-刷题后台管理系统</span>
                     </div>
                     <div className="loginForm">
-                        <Form className="login-form">
+                        <Form onSubmit={this._handleSubmit} className="login-form">
                             <Item>
                                 {
                                     getFieldDecorator('account', {
