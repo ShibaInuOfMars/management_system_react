@@ -9,6 +9,9 @@ import './login.less';
 // 图片（必须先引入才能使用）
 import loginLogo from './../../static/images/login-logo.jpg';
 
+// antd
+import {Button} from 'antd';
+
 export default class Login extends Component {
 
     state = {
@@ -143,7 +146,7 @@ export default class Login extends Component {
                         <span>动感-刷题后台管理系统</span>
                     </div>
                     <div className="loginForm">
-
+                        <Button>按钮</Button>
                     </div>
                 </div>
             </div>
