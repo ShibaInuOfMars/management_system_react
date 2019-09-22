@@ -19,8 +19,8 @@ export const getLoginInfo = (key = USERKEY) => {
 };
 
 // 4. 存储登录信息
-export const saveLoginInfo = (key = USERKEY, value) => {
-    store.set(key, JSON.stringify(value));
+export const saveLoginInfo = (value, key = USERKEY) => {
+    store.set(key, value);
 };
 
 // 5. 移动登录信息

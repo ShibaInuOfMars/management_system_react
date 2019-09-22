@@ -9,7 +9,11 @@ import './login.less';
 // 图片（必须先引入才能使用）
 import loginLogo from './../../static/images/login-logo.jpg';
 
+// 登录
 import {reqLogin} from './../../api/user-api';
+
+// 存储到本地
+import {saveLoginInfo} from './../../utils/user-tool';
 
 // antd
 import {Form, Icon, Input, Button, message} from 'antd';
@@ -147,8 +151,13 @@ class Login extends Component {
                 const {account, password} = values;
                 let res = await reqLogin('/login', {account, password});
                 if (res.status === 0) { // 验证成功
-                    // console.log('成功');
+                    // console.log(res);
                     // 2. 将数据存储到本地
+                    message.success('登录成功');
+                    saveLoginInfo(res.data[0]);
+
+                    // 3. 跳转到主页
+                    this.props.history.replace('/');
                 } else { // 验证失败
                     message.error(res.msg);
                 }
