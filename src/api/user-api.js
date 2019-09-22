@@ -20,8 +20,13 @@ export const isLogin = (key = USERKEY) => {
     } else { // 已登录
         return true;
     }*/
-
-    return getObj(key) !== '{}';
+    // console.log(getObj(key));
+    let obj = getObj(key);
+    if (obj === null || !obj.id) {
+        return false;
+    } else if (obj.id) {
+        return true;
+    }
 };
 
 // 4. 获取登录信息

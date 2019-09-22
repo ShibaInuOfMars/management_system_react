@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+import {Redirect} from 'react-router-dom';
+
 // 动态粒子特效
 import Particles from 'react-particles-js';
 
@@ -10,10 +12,7 @@ import './login.less';
 import loginLogo from './../../static/images/login-logo.jpg';
 
 // 登录
-import {reqLogin} from './../../api/user-api';
-
-// 存储到本地
-import {isLogin, saveLoginInfo} from '../../utils/store-tool';
+import {reqLogin, saveLoginInfo, isLogin} from './../../api/user-api';
 
 // antd
 import {Form, Icon, Input, Button, message} from 'antd';
@@ -166,6 +165,10 @@ class Login extends Component {
     };
 
     render() {
+        // 判断用户是否登录，如果已登录则应该直接进入主页
+        if (isLogin()) { // 已登录
+            return <Redirect to='/' />;
+        }
 
         // 粒子特效参数
         const {particlesParams} = this.state;
