@@ -13,7 +13,7 @@ import loginLogo from './../../static/images/login-logo.jpg';
 import {reqLogin} from './../../api/user-api';
 
 // 存储到本地
-import {saveLoginInfo} from './../../utils/user-tool';
+import {isLogin, saveLoginInfo} from '../../utils/store-tool';
 
 // antd
 import {Form, Icon, Input, Button, message} from 'antd';
