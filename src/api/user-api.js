@@ -31,7 +31,7 @@ export const isLogin = (key = USERKEY) => {
 
 // 4. 获取登录信息
 export const getLoginInfo = (key = USERKEY) => {
-    return  JSON.parse(getObj(key)) || {};
+    return  getObj(key) || {};
 };
 
 // 5. 保存登录信息
