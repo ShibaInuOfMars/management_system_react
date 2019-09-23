@@ -7,10 +7,11 @@ import './admin.less';
 
 // 相关组件
 import LeftSider from './components/left-sider/left-sider';
+import RightHeader from './components/right-header/right-header';
 
 // antd
-import { Layout, Icon } from 'antd';
-const { Header, Content, Footer } = Layout;
+import {Layout} from 'antd';
+const { Content, Footer } = Layout;
 
 export default class Admin extends Component{
     state = {
@@ -36,13 +37,8 @@ export default class Admin extends Component{
                 {/* 左边菜单 */}
                 <LeftSider collapsed={collapsed} />
                 <Layout>
-                    <Header className="header">
-                        <Icon
-                            className="trigger"
-                            type={collapsed ? 'menu-unfold' : 'menu-fold'}
-                            onClick={this.toggle}
-                        />
-                    </Header>
+                    {/* 右边头部 */}
+                    <RightHeader collapsed={collapsed} toggle={this.toggle} />
                     <Content className="content">
                         Content
                     </Content>
