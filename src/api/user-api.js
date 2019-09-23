@@ -3,7 +3,7 @@ import ajax from './ajax';
 import {saveObj, getObj, removeObj} from './../utils/store-tool';
 
 // 1. 定义基础路径
-const BASE_URL = 'http://localhost:3000/api/users';
+const BASE_URL = '/api/users';
 
 // 2. 登录请求
 export const reqLogin = (url, {account, password}) => {
