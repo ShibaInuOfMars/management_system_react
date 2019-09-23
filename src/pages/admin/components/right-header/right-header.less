@@ -45,6 +45,43 @@
 
     .otherMsg {
       line-height: 32px;
+      display: flex;
+      width: 100%;
+
+      .left {
+        flex: 1;
+        text-align: center;
+        position: relative;
+
+        &::after {
+          content: "";
+          border: 12px solid transparent;
+          border-top-color: #fff;
+          display: inline-block;
+          position: absolute;
+          top: 30px;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+      }
+
+      .right {
+        flex: 9;
+        text-align: right;
+      }
+
+      .time {
+        margin-right: 10px;
+      }
+
+      .weather {
+        margin-left: 5px;
+
+        img {
+          width: 30px;
+          margin-right: 5px;
+        }
+      }
     }
   }
 }

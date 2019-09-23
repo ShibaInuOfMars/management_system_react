@@ -11,14 +11,20 @@ import {getLoginInfo, removeLoginInfo} from './../../../../api/user-api';
 
 import {timeFormate} from './../../../../utils/time-tool';
 
+import {getWeather} from './../../../../api/weather-api';
+
 // antd
 import {Layout, Icon, Button, Modal, message} from 'antd';
+
 const {Header} = Layout;
 
 class RightHeader extends Component {
 
     state = {
-        time: timeFormate(new Date())
+        time: timeFormate(new Date()),
+        picURLday: '',
+        picURLnight: '',
+        notice: ''
     };
 
     static propTypes = {
@@ -28,9 +34,19 @@ class RightHeader extends Component {
 
     componentDidMount() {
         this.timer = setInterval(() => {
-            this.state.time = timeFormate(new Date());
-            this.setState(this.state);
+            this.setState({
+                time: timeFormate(new Date())
+            });
         }, 1000);
+
+        getWeather().then(res => {
+            let {picURLday, picURLnight, notice} = res;
+            this.setState({
+                picURLday,
+                picURLnight,
+                notice
+            });
+        });
     }
 
     componentWillUnmount() {
@@ -56,7 +72,7 @@ class RightHeader extends Component {
     render() {
         const {collapsed, toggle} = this.props;
 
-        const {time} = this.state;
+        const {time, picURLday, picURLnight, notice} = this.state;
 
         let username = getLoginInfo().userName;
 
@@ -74,7 +90,16 @@ class RightHeader extends Component {
                         <Button type="link" onClick={this._logOut}>退出</Button>
                     </div>
                     <div className="otherMsg">
-                        时间：<span className="time">{time}</span>天气
+                        <div className="left">首页</div>
+                        <div className="right">
+                            时间：<span className="time">{time}</span>
+                            天气
+                            <span className="weather">
+                            <img src={picURLday} alt=""/>
+                            <img src={picURLnight} alt=""/>
+                            <span>{notice}</span>
+                        </span>
+                        </div>
                     </div>
                 </div>
             </Header>
