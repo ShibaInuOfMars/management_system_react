@@ -38,7 +38,7 @@ class LeftSider extends Component {
     _siderItemReq = async () => {
         // 1. 发送请求
         let res = await reqSiderItem('/list');
-        console.log(res);
+        // console.log(res);
         if (res.status === 0) { // 成功
             this.state.menuList = res.data;
             // 同步
