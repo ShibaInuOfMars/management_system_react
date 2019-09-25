@@ -2,30 +2,22 @@ import React, {Component} from 'react';
 
 import {getLoginInfo} from './../../api/user-api';
 
-import {Form, Input, Button, Upload, Icon, Modal} from 'antd';
+import {updateInfo, saveLoginInfo} from './../../api/user-api';
+
+import UploadHeader from './upload-header';
+
+import {Form, Input, Button, message} from 'antd';
 const {Item} = Form;
 
-function getBase64(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-    });
-}
-
 class User extends Component {
+    constructor(props) {
+        super(props);
+
+        this.uploadImg = React.createRef();
+    }
+
     state = {
-        previewVisible: false,
-        previewImage: '',
-        fileList: [
-            {
-                uid: '-1',
-                name: 'image.png',
-                status: 'done',
-                url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-            }
-        ],
+        imageName: ''
     };
 
     formItemLayout = {
@@ -52,40 +44,37 @@ class User extends Component {
         },
     };
 
-    // 取消预览图片
-    handleCancel = () => this.setState({ previewVisible: false });
+    // 提交表单
+    handleSubmit = e => {
+        e.preventDefault();
+        this.props.form.validateFields(async (err, values) => {
+            if (!err) {
+                const {id, account, password, userName} = values;
+                const headerImg = this.uploadImg.current._getImageName();
 
-    // 预览图片展示（url或base64编码）
-    handlePreview = async file => {
-        if (!file.url && !file.preview) {
-            file.preview = await getBase64(file.originFileObj);
-        }
+                let res = await updateInfo('/update', id, account, password, userName, headerImg);
 
-        this.setState({
-            previewImage: file.url || file.preview,
-            previewVisible: true,
+                if (res.status === 0) {
+                    message.success('更新成功');
+                    // console.log(res);
+
+                    // 更新本地数据
+                    saveLoginInfo(res.data[0]);
+                } else {
+                    message.error('更新失败');
+                }
+            }
         });
     };
-
-    // 添加图片
-    handleChange = ({ fileList }) => this.setState({ fileList });
 
     render() {
         const {getFieldDecorator} = this.props.form;
 
-        const { previewVisible, previewImage, fileList } = this.state;
-        const uploadButton = (
-            <div>
-                <Icon type="plus" />
-                <div className="ant-upload-text">Upload</div>
-            </div>
-        );
-
         let user = getLoginInfo();
-        console.log(user);
+        // console.log(user);
 
         return (
-            <Form {...this.formItemLayout}>
+            <Form onSubmit={this.handleSubmit} {...this.formItemLayout}>
                 <Item>
                     {
                         getFieldDecorator('id', {
@@ -129,21 +118,10 @@ class User extends Component {
                     }
                 </Item>
                 <Item label="头像：">
-                    <Upload
-                        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                        listType="picture-card"
-                        fileList={fileList}
-                        onPreview={this.handlePreview}
-                        onChange={this.handleChange}
-                    >
-                        {fileList.length >= 1 ? null : uploadButton}
-                    </Upload>
-                    <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
-                        <img alt="example" style={{ width: '100%' }} src={previewImage} />
-                    </Modal>
+                    <UploadHeader ref={this.uploadImg} headerImg={user.headerImg} />
                 </Item>
                 <Item {...this.tailFormItemLayout}>
-                    <Button type="danger">修改</Button>
+                    <Button htmlType="submit" type="danger">修改</Button>
                 </Item>
             </Form>
         );

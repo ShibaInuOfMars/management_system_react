@@ -43,3 +43,14 @@ export const saveLoginInfo = (value, key = USERKEY) => {
 export const removeLoginInfo = (key = USERKEY) => {
     removeObj(key);
 };
+
+// 6. 更新信息
+export const updateInfo = (url, id, account, password, userName, headerImg) => {
+    return ajax(BASE_URL + url, {
+        id,
+        account,
+        password,
+        userName,
+        headerImg
+    }, 'post');
+};
