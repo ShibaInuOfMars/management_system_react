@@ -11,6 +11,7 @@ import RightHeader from './components/right-header/right-header';
 import Index from './../index/index';
 import User from './../user/user';
 import Category from './../category/category';
+import NotFound from './../not-found/not-found';
 
 // antd
 import {Layout} from 'antd';
@@ -48,6 +49,7 @@ export default class Admin extends Component{
                             <Route path="/home" component={Index} />
                             <Route path="/user" component={User} />
                             <Route path="/category" component={Category} />
+                            <Route component={NotFound} />
                         </Switch>
                     </Content>
                     <Footer className="copyright">Copyright &copy; 2019 动感 All Rights Reserved.</Footer>
