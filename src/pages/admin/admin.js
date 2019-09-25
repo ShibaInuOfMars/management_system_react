@@ -8,6 +8,9 @@ import './admin.less';
 // 相关组件
 import LeftSider from './components/left-sider/left-sider';
 import RightHeader from './components/right-header/right-header';
+import Index from './../index/index';
+import User from './../user/user';
+import Category from './../category/category';
 
 // antd
 import {Layout} from 'antd';
@@ -41,7 +44,10 @@ export default class Admin extends Component{
                     <RightHeader collapsed={collapsed} toggle={this.toggle} />
                     <Content className="content">
                         <Switch>
-                            <Route />
+                            <Redirect from="/" exact to="/home" />
+                            <Route path="/home" component={Index} />
+                            <Route path="/user" component={User} />
+                            <Route path="/category" component={Category} />
                         </Switch>
                     </Content>
                     <Footer className="copyright">Copyright &copy; 2019 动感 All Rights Reserved.</Footer>
