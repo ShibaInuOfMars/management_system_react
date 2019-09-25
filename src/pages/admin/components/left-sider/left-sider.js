@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import {Link, withRouter} from 'react-router-dom';
 
 // 相关api
-import {reqSiderItem} from './../../../../api/sider-api';
+import {reqSiderItem, publishMenu} from './../../../../api/sider-api';
 
 // 引入图片
 import logo from './../../../../static/images/login-logo.jpg';
@@ -95,6 +95,30 @@ class LeftSider extends Component {
         return '';
     };
 
+    // 根据一个指定的key获取到对应的icon, title（用于面包屑的展示）
+    _getCurrentDetail = (key, meunList = this.state.menuList) => {
+        for (let i = 0; i < meunList.length; i++) {
+            let menu = meunList[i];
+
+            // 判断key是否相同
+            if (menu._key === key) { // 相同
+                return {
+                    title: menu.title,
+                    icon: menu.icon
+                }
+            }
+
+            // 如果还存在子菜单
+            if (menu.children) {
+                let result = this._getCurrentDetail(key, menu.children);
+
+                if (result) {
+                    return result;
+                }
+            }
+        }
+    };
+
     render() {
 
         const {collapsed, location} = this.props;
@@ -103,9 +127,31 @@ class LeftSider extends Component {
 
         // 获取地址栏路径
         let path = location.pathname;
+        // console.log(path);
 
-        // 获取应该展开的那项
+        // 获取应该展开的菜单项
         let openKeys = this._getOpenKeys(menuList, path);
+        // console.log(openKeys);
+
+        // 存储用于面包屑展示的信息
+        let breadcrumb = [];
+
+        // 当前路径的信息
+        let currentKey = this._getCurrentDetail(path);
+        // console.log(currentKey);
+        if (currentKey) {
+            breadcrumb.push(currentKey);
+        }
+
+        // 被展开菜单项的信息
+        let openMenu = this._getCurrentDetail(openKeys);
+        // console.log(openMenu);
+        if (openMenu) {
+            breadcrumb.unshift(openMenu);
+        }
+
+        // 发布消息
+        publishMenu(breadcrumb);
 
         return (
 

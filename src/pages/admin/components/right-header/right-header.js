@@ -13,10 +13,12 @@ import {timeFormate} from './../../../../utils/time-tool';
 
 import {getWeather} from './../../../../api/weather-api';
 
-// antd
-import {Layout, Icon, Button, Modal, message} from 'antd';
+import {subscribeMenu} from './../../../../api/sider-api';
 
+// antd
+import {Layout, Icon, Button, Modal, message, Breadcrumb} from 'antd';
 const {Header} = Layout;
+const {Item} = Breadcrumb;
 
 class RightHeader extends Component {
 
@@ -24,7 +26,8 @@ class RightHeader extends Component {
         time: timeFormate(new Date()),
         picURLday: '',
         picURLnight: '',
-        notice: ''
+        notice: '',
+        menuItem: null
     };
 
     static propTypes = {
@@ -33,18 +36,27 @@ class RightHeader extends Component {
     };
 
     componentDidMount() {
+        // 时间
         this.timer = setInterval(() => {
             this.setState({
                 time: timeFormate(new Date())
             });
         }, 1000);
 
+        // 天气
         getWeather().then(res => {
             let {picURLday, picURLnight, notice} = res;
             this.setState({
                 picURLday,
                 picURLnight,
                 notice
+            });
+        });
+
+        // 订阅消息
+        subscribeMenu((msg, data) => {
+            this.setState({
+                menuItem: data
             });
         });
     }
@@ -72,7 +84,7 @@ class RightHeader extends Component {
     render() {
         const {collapsed, toggle} = this.props;
 
-        const {time, picURLday, picURLnight, notice} = this.state;
+        const {time, picURLday, picURLnight, notice, menuItem} = this.state;
 
         let username = getLoginInfo().userName;
 
@@ -90,7 +102,20 @@ class RightHeader extends Component {
                         <Button type="link" onClick={this._logOut}>退出</Button>
                     </div>
                     <div className="otherMsg">
-                        <div className="left">首页</div>
+                        <div className="left">
+                            <Breadcrumb>
+                                {
+                                    menuItem ? menuItem.map(item => {
+                                        return (
+                                            <Item key={item.title}>
+                                                <Icon type={item.icon} />
+                                                <span>{item.title}</span>
+                                            </Item>
+                                        )
+                                    }) : ''
+                                }
+                            </Breadcrumb>
+                        </div>
                         <div className="right">
                             时间：<span className="time">{time}</span>
                             天气

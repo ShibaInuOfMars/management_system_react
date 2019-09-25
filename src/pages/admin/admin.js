@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import {Redirect} from 'react-router-dom';
+import {Redirect, Switch, Route} from 'react-router-dom';
 import {isLogin} from "../../api/user-api";
 
 import './admin.less';
@@ -40,7 +40,9 @@ export default class Admin extends Component{
                     {/* 右边头部 */}
                     <RightHeader collapsed={collapsed} toggle={this.toggle} />
                     <Content className="content">
-                        Content
+                        <Switch>
+                            <Route />
+                        </Switch>
                     </Content>
                     <Footer className="copyright">Copyright &copy; 2019 动感 All Rights Reserved.</Footer>
                 </Layout>
