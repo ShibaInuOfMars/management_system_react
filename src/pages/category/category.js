@@ -4,6 +4,8 @@ import './category.less';
 
 import {getMenuListWithParentID} from './../../api/sider-api';
 
+import AddMenu from './add-menu';
+
 import { Card, Table, Icon, Button, Divider, Breadcrumb  } from 'antd';
 const {Item} = Breadcrumb;
 
@@ -11,7 +13,8 @@ export default class Category extends Component {
 
     state = {
         dataSource: [],
-        currentParent: {} // 存放当前子菜单的父菜单
+        currentParent: {}, // 存放当前子菜单的父菜单
+        visible: 0, // 控制弹出框的显示和隐藏，0为都隐藏，1为添加框显示，2为编辑框显示
     };
 
     columns = [
@@ -63,7 +66,7 @@ export default class Category extends Component {
 
                         <Button>编辑</Button>
                         <Divider type="vertical" />
-                        <Button>删除</Button>
+                        <Button type="danger">删除</Button>
                     </span>
                 )
             },
@@ -103,8 +106,20 @@ export default class Category extends Component {
         this._showMenusWithParentID(pMenu.id);
     }
 
+    _showModal = (type) => {
+        this.setState({
+            visible: type
+        });
+    };
+
+    _handleCancel = () => {
+        this.setState({
+            visible: 0
+        });
+    };
+
     render() {
-        const {dataSource, currentParent} = this.state;
+        const {dataSource, currentParent, visible} = this.state;
 
         let title =(
             <Breadcrumb>
@@ -118,22 +133,26 @@ export default class Category extends Component {
         );
 
         return (
-            <Card
-                title={title}
-                extra={<Button type='primary'>添加</Button>}
-                className="categoryWrapper"
-            >
-                <Table
-                    dataSource={dataSource}
-                    columns={this.columns}
-                    bordered
-                    rowKey="id"
-                    pagination={{
-                        defaultPageSize: 3,
-                        showQuickJumper: true
-                    }}
-                />
-            </Card>
+            <div>
+                <Card
+                    title={title}
+                    extra={<Button onClick={() => this._showModal(1)} type='primary'>添加</Button>}
+                    className="categoryWrapper"
+                >
+                    <Table
+                        dataSource={dataSource}
+                        columns={this.columns}
+                        bordered
+                        rowKey="id"
+                        pagination={{
+                            defaultPageSize: 3,
+                            showQuickJumper: true
+                        }}
+                    />
+                </Card>
+
+                <AddMenu visible={visible === 1} _handleCancel={this._handleCancel} />
+            </div>
         );
     }
 }

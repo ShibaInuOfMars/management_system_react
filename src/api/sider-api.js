@@ -17,6 +17,12 @@ export const getMenuListWithParentID = (parentID = 0) => {
     });
 };
 
+// 3. 添加菜单
+export const addOneMenu = (title, icon, _key, parentID) => {
+    return ajax(BASE_URL + '/addMenu', {
+        title, icon, _key, parentID
+    }, 'post');
+};
 
 // 发布订阅
 const MENUKEY = 'MENUKEY';
