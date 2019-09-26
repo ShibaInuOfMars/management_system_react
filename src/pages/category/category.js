@@ -2,11 +2,12 @@ import React, {Component} from 'react';
 
 import './category.less';
 
-import {getMenuListWithParentID} from './../../api/sider-api';
+import {getMenuListWithParentID, delOneMenu} from './../../api/sider-api';
 
 import AddMenu from './add-menu';
 
-import { Card, Table, Icon, Button, Divider, Breadcrumb  } from 'antd';
+import {Card, Table, Icon, Button, Divider, Breadcrumb, message, Modal} from 'antd';
+
 const {Item} = Breadcrumb;
 
 export default class Category extends Component {
@@ -15,6 +16,7 @@ export default class Category extends Component {
         dataSource: [],
         currentParent: {}, // 存放当前子菜单的父菜单
         visible: 0, // 控制弹出框的显示和隐藏，0为都隐藏，1为添加框显示，2为编辑框显示
+        isLoading: true
     };
 
     columns = [
@@ -61,12 +63,14 @@ export default class Category extends Component {
                 return (
                     <span>
                         {
-                            this.state.currentParent.parentID !== 0 ? (<span><Button onClick={() => this._showChildrenMenu(record)}>查看子菜单</Button><Divider type="vertical" /></span>) : ''
+                            this.state.currentParent.parentID !== 0 ? (
+                                <span><Button onClick={() => this._showChildrenMenu(record)}>查看子菜单</Button><Divider
+                                    type="vertical"/></span>) : ''
                         }
 
                         <Button>编辑</Button>
-                        <Divider type="vertical" />
-                        <Button type="danger">删除</Button>
+                        <Divider type="vertical"/>
+                        <Button type="danger" onClick={() => this._confirmDeleteMeun(record)}>删除</Button>
                     </span>
                 )
             },
@@ -82,7 +86,10 @@ export default class Category extends Component {
 
     // 根据parentID查询一级菜单还是二级菜单
     _showMenusWithParentID = async (parentID = 0) => {
-        if (parentID ===0 ) {
+        this.setState({
+            isLoading: true
+        });
+        if (parentID === 0) {
             // 清空父菜单对象
             this.setState({
                 currentParent: {}
@@ -92,7 +99,8 @@ export default class Category extends Component {
         let res = await getMenuListWithParentID(parentID);
         if (res.status === 0) {
             this.setState({
-                dataSource : res.data
+                dataSource: res.data,
+                isLoading: false
             });
         }
     };
@@ -106,22 +114,49 @@ export default class Category extends Component {
         this._showMenusWithParentID(pMenu.id);
     }
 
+    // 显示添加或编辑面板
     _showModal = (type) => {
         this.setState({
             visible: type
         });
     };
 
+    // 隐藏添加或编辑面板
     _handleCancel = () => {
         this.setState({
             visible: 0
         });
     };
 
-    render() {
-        const {dataSource, currentParent, visible} = this.state;
+    // 确认删除菜单
+    _confirmDeleteMeun = (menu) => {
+        Modal.confirm({
+            title: '确认删除吗？',
+            content: '删除操作会连同该菜单下的所有子菜单一起删除，请谨慎操作！',
+            okText: '删除',
+            cancelText: '取消',
+            okType: 'danger',
+            onOk: () => this._deleteMeun(menu)
+        });
+    };
 
-        let title =(
+    // 删除菜单
+    _deleteMeun = async (menu) => {
+        let res = await delOneMenu(menu.id);
+        if (res.status === 0) {
+            // console.log(res);
+            message.success('删除成功');
+
+            window.location.reload();
+        } else {
+            message.error('删除失败');
+        }
+    };
+
+    render() {
+        const {dataSource, currentParent, visible, isLoading} = this.state;
+
+        let title = (
             <Breadcrumb>
                 <Item onClick={() => this._showMenusWithParentID(0)} style={{cursor: "pointer"}}>
                     一级菜单
@@ -148,10 +183,11 @@ export default class Category extends Component {
                             defaultPageSize: 3,
                             showQuickJumper: true
                         }}
+                        loading={isLoading}
                     />
                 </Card>
 
-                <AddMenu visible={visible === 1} _handleCancel={this._handleCancel} />
+                <AddMenu visible={visible === 1} _handleCancel={this._handleCancel}/>
             </div>
         );
     }

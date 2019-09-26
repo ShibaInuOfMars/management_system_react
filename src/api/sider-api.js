@@ -24,6 +24,13 @@ export const addOneMenu = (title, icon, _key, parentID) => {
     }, 'post');
 };
 
+// 4. 删除菜单
+export const delOneMenu = (id) => {
+    return ajax(BASE_URL + '/deleteMenu', {
+        id
+    }, 'post');
+};
+
 // 发布订阅
 const MENUKEY = 'MENUKEY';
 
