@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
-import { Modal, Form, Input, Select  } from 'antd';
-import {getMenuListWithParentID} from "../../api/sider-api";
+import { Modal, Form, Input, Select, message } from 'antd';
+import {getMenuListWithParentID, updateMenu} from "../../api/sider-api";
 const {Item} = Form;
 const {Option} = Select;
 
@@ -27,8 +27,30 @@ class EditMenu extends Component{
         }
     };
 
+    // 确认更新菜单
+    _confirmUpdateMenu = () => {
+        // console.log(111);
+        this.props.form.validateFields(async (err, values) => {
+            if (!err) {
+                let {parentID, title, icon, _key} = values;
+
+                let res = await updateMenu(this.props.editMenu.id, title, icon, _key, parentID);
+                console.log(res);
+
+                if (res.status === 0) {
+                    message.success('修改成功');
+
+                    // 刷新界面
+                    window.location.reload();
+                } else {
+                    message.error('修改失败');
+                }
+            }
+        });
+    };
+
     render() {
-        const {visible, _handleCancel} = this.props;
+        const {visible, _handleCancel, editMenu} = this.props;
         const {getFieldDecorator} = this.props.form;
         const {parentMenu} = this.state;
 
@@ -38,20 +60,22 @@ class EditMenu extends Component{
                     title="添加菜单"
                     visible={visible}
                     onCancel={_handleCancel}
-                    okText="添加"
+                    okText="更新"
                     cancelText="取消"
+                    onOk={this._confirmUpdateMenu}
                 >
                     <Form>
                         <Item>
                             {
                                 getFieldDecorator('parentID', {
-                                    initialValue: 0
+                                    initialValue: editMenu.parentID
                                 })(
                                     <Select placeholder='选择一个分类'>
                                         <Option value={0}>一级菜单</Option>
                                         {
                                             parentMenu.length > 0 ? (
                                                 parentMenu.map(item => {
+                                                    if (item.title === editMenu.title) return '';
                                                     return <Option value={item.id} key='id'>{item.title}</Option>
                                                 })
                                             ) : ''
@@ -63,6 +87,7 @@ class EditMenu extends Component{
                         <Item>
                             {
                                 getFieldDecorator('title', {
+                                    initialValue: editMenu.title,
                                     rules: [
                                         {required: true, message: '此项不能为空'}
                                     ]
@@ -74,6 +99,7 @@ class EditMenu extends Component{
                         <Item>
                             {
                                 getFieldDecorator('icon', {
+                                    initialValue: editMenu.icon,
                                     rules: [
                                         {required: true, message: '此项不能为空'}
                                     ]
@@ -85,6 +111,7 @@ class EditMenu extends Component{
                         <Item>
                             {
                                 getFieldDecorator('_key', {
+                                    initialValue: editMenu._key,
                                     rules: [
                                         {required: true, message: '此项不能为空'}
                                     ]

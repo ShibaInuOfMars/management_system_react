@@ -31,6 +31,13 @@ export const delOneMenu = (id) => {
     }, 'post');
 };
 
+// 5. 更新菜单
+export const updateMenu =(id, title, icon, _key, parentID) => {
+    return ajax(BASE_URL + '/updateMenu', {
+        id, title, icon, _key, parentID
+    }, 'post');
+};
+
 // 发布订阅
 const MENUKEY = 'MENUKEY';
 

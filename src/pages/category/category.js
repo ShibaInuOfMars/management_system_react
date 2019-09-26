@@ -5,6 +5,7 @@ import './category.less';
 import {getMenuListWithParentID, delOneMenu} from './../../api/sider-api';
 
 import AddMenu from './add-menu';
+import EditMenu from './edit-menu';
 
 import {Card, Table, Icon, Button, Divider, Breadcrumb, message, Modal} from 'antd';
 
@@ -16,7 +17,8 @@ export default class Category extends Component {
         dataSource: [],
         currentParent: {}, // 存放当前子菜单的父菜单
         visible: 0, // 控制弹出框的显示和隐藏，0为都隐藏，1为添加框显示，2为编辑框显示
-        isLoading: true
+        isLoading: true,
+        editMenu: {}
     };
 
     columns = [
@@ -68,7 +70,7 @@ export default class Category extends Component {
                                     type="vertical"/></span>) : ''
                         }
 
-                        <Button>编辑</Button>
+                        <Button onClick={() => this._showEdit(record)}>编辑</Button>
                         <Divider type="vertical"/>
                         <Button type="danger" onClick={() => this._confirmDeleteMeun(record)}>删除</Button>
                     </span>
@@ -114,11 +116,19 @@ export default class Category extends Component {
         this._showMenusWithParentID(pMenu.id);
     }
 
-    // 显示添加或编辑面板
+    // 显示添加面板
     _showModal = (type) => {
         this.setState({
             visible: type
         });
+    };
+
+    // 显示编辑面板
+    _showEdit = (menu) => {
+        this.setState({
+            visible: 2,
+            editMenu: menu
+        })
     };
 
     // 隐藏添加或编辑面板
@@ -154,7 +164,7 @@ export default class Category extends Component {
     };
 
     render() {
-        const {dataSource, currentParent, visible, isLoading} = this.state;
+        const {dataSource, currentParent, visible, isLoading, editMenu} = this.state;
 
         let title = (
             <Breadcrumb>
@@ -187,7 +197,8 @@ export default class Category extends Component {
                     />
                 </Card>
 
-                <AddMenu visible={visible === 1} _handleCancel={this._handleCancel}/>
+                <AddMenu visible={visible === 1} _handleCancel={this._handleCancel} />
+                <EditMenu visible={visible === 2} _handleCancel={this._handleCancel} editMenu={editMenu} />
             </div>
         );
     }
