@@ -131,9 +131,9 @@ export default class QuestionList extends Component {
         let res = await delQuesiotn(question.id);
         console.log(res);
         if (res.status === 0) {
-            message.success('删除成功');
-
             window.location.reload();
+
+            message.success('删除成功');
         } else {
             message.error('删除失败');
         }

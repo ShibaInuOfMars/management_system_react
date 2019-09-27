@@ -38,10 +38,10 @@ class EditMenu extends Component{
                 console.log(res);
 
                 if (res.status === 0) {
-                    message.success('修改成功');
-
                     // 刷新界面
                     window.location.reload();
+
+                    message.success('修改成功');
                 } else {
                     message.error('修改失败');
                 }

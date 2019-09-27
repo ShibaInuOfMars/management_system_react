@@ -39,7 +39,7 @@ class AddMenu extends Component{
                 // console.log(res);
 
                 if (res.status === 0) {
-                    message.success(res.msg);
+                    message.success('添加成功');
 
                     // 刷新界面
                     window.location.reload();
