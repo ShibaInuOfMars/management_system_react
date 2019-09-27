@@ -68,7 +68,7 @@ class OperationPanel extends Component {
 
             // 富文本编辑器的内容
             let answer = this.editorRef.current._getContent();
-            console.log(answer);
+            // console.log(answer);
 
             if (answer === '<p></p>') {
 
