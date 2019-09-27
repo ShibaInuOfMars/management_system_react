@@ -13,6 +13,7 @@ import User from './../user/user';
 import Category from './../category/category';
 import NotFound from './../not-found/not-found';
 import Question from './../question/question';
+import Statistics from './../statistics/statistics';
 
 // antd
 import {Layout} from 'antd';
@@ -51,6 +52,7 @@ export default class Admin extends Component{
                             <Route path="/user" component={User} />
                             <Route path="/category" component={Category} />
                             <Route path="/question" component={Question} />
+                            <Route path="/charts" component={Statistics} />
                             <Route component={NotFound} />
                         </Switch>
                     </Content>
