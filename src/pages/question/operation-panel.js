@@ -4,7 +4,7 @@ import {getAllCourse} from  './../../api/sider-api';
 
 import {addQuestion, editQuestion} from './../../api/question-api';
 
-import Editor from './editor';
+import EditorR from './editor';
 
 import {Card, Breadcrumb, Button, Form, Input, Select, message} from 'antd';
 const {Item} = Breadcrumb;
@@ -21,13 +21,13 @@ class OperationPanel extends Component {
 
 
     state = {
-        currentCourse: {},
-        editQuestion: {},
+        currentCourse: this.props.location.state.currentCourse || {},
+        editQuestion: this.props.location.state.editQuestion || {},
         course: []
     };
 
     componentDidMount() {
-        let locationState = this.props.location.state;
+        /*let locationState = this.props.location.state;
 
         if (locationState.editQuestion) { // 编辑题目
             this.setState({
@@ -38,7 +38,7 @@ class OperationPanel extends Component {
             this.setState({
                 currentCourse: locationState.currentCourse
             });
-        }
+        }*/
 
         this._getAllCourse();
     }
@@ -120,11 +120,13 @@ class OperationPanel extends Component {
 
         const {currentCourse, editQuestion, course} = this.state;
 
+        // console.log(editQuestion.answer);
+
         const {getFieldDecorator} = this.props.form;
 
         let courseTitle = currentCourse.title;
 
-        let type = editQuestion.id ? '编辑' : '添加';
+        let type = (editQuestion && editQuestion.id) ? '编辑' : '添加';
 
         let title = (
             <Breadcrumb>
@@ -133,6 +135,8 @@ class OperationPanel extends Component {
                 <Item>{type}</Item>
             </Breadcrumb>
         );
+
+        console.log(editQuestion);
 
         return (
             <div>
@@ -164,7 +168,7 @@ class OperationPanel extends Component {
                                     rules: [
                                         {required: true, message: '此项必须填写'}
                                     ],
-                                    initialValue: editQuestion.title || ''
+                                    initialValue: (editQuestion && editQuestion.title) || ''
                                 })(
                                     <Input placeholder='请填写题目标题' />
                                 )
@@ -176,7 +180,7 @@ class OperationPanel extends Component {
                                     rules: [
                                         {required: true, message: '此项必须填写'}
                                     ],
-                                    initialValue: editQuestion.content || ''
+                                    initialValue: (editQuestion && editQuestion.content) || ''
                                 })(
                                     <TextArea  placeholder='请填写题目内容' />
                                 )
@@ -188,10 +192,9 @@ class OperationPanel extends Component {
                                     rules: [
                                         {required: true, message: '此项必须填写'}
                                     ],
-                                    initialValue: editQuestion.answer || ''
+                                    initialValue: (editQuestion && editQuestion.answer) || ''
                                 })(
-                                    // 非表单组件，则默认值会在自动定义组件的props的value中
-                                    <Editor ref={this.editorRef} />
+                                    <EditorR ref={this.editorRef} />
                                 )
                             }
                         </Form.Item>

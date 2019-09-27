@@ -1,23 +1,16 @@
 import React, {Component} from 'react';
 
 // 引入编辑器组件
-import BraftEditor from 'braft-editor'
+import BraftEditor from 'braft-editor';
 // 引入编辑器样式
-import 'braft-editor/dist/index.css'
+import 'braft-editor/dist/index.css';
 
-export default class Editor extends Component {
+export default class EditorR extends Component {
 
     state = {
         // 创建一个空的editorState作为初始值
-        editorState: BraftEditor.createEditorState(null)
+        editorState: BraftEditor.createEditorState(this.props.value)
     };
-
-    componentDidMount() {
-        let defaultValue = this.props.value || '';
-        this.setState({
-            editorState: BraftEditor.createEditorState(defaultValue)
-        });
-    }
 
     _handleEditorChange = (editorState) => {
         this.setState({ editorState });
@@ -29,7 +22,6 @@ export default class Editor extends Component {
     };
 
     render() {
-
         const { editorState } = this.state;
 
         return (

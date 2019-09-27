@@ -121,7 +121,7 @@ export default class QuestionList extends Component {
     _showAnswer = (question) => {
         Modal.info({
             title: question.title,
-            content: question.answer,
+            content: <div dangerouslySetInnerHTML={{__html: question.answer}}></div>,
             okText: '确认'
         });
     };
