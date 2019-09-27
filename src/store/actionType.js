@@ -1,0 +1,1 @@
+export const REQ_QUESTION_MSG = 'REQ_QUESTION_MSG';
