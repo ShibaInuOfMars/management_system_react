@@ -38,6 +38,9 @@ export const updateMenu =(id, title, icon, _key, parentID) => {
     }, 'post');
 };
 
+// 6. 获取所有课程分类
+export const getAllCourse = () => ajax(BASE_URL + '/getAllCourse');
+
 // 发布订阅
 const MENUKEY = 'MENUKEY';
 
