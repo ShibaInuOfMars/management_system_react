@@ -40,3 +40,5 @@ export const editQuestion = (id, title, content, categoryID, answer) => {
         answer
     }, 'post');
 };
+
+export const questionMsg = () => ajax(BASE_URL + '/questionMsg');
