@@ -20,12 +20,12 @@ class OperationPanel extends Component {
     componentDidMount() {
         let locationState = this.props.location.state;
 
-        if (locationState.editQuestion) {
+        if (locationState.editQuestion) { // 编辑题目
             this.setState({
                 currentCourse: locationState.currentCourse,
                 editQuestion: locationState.editQuestion
             });
-        } else {
+        } else { // 新增题目
             this.setState({
                 currentCourse: locationState.currentCourse
             });
