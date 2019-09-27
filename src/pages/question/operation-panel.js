@@ -6,7 +6,7 @@ import {addQuestion, editQuestion} from './../../api/question-api';
 
 import EditorR from './editor';
 
-import {Card, Breadcrumb, Button, Form, Input, Select, message} from 'antd';
+import {Card, Breadcrumb, Button, Form, Input, Select, message, Modal} from 'antd';
 const {Item} = Breadcrumb;
 const {TextArea} = Input;
 const {Option} = Select;
@@ -62,31 +62,45 @@ class OperationPanel extends Component {
     _handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll(async (err, values) => {
-            if (!err) {
-                let {categoryID, title, content} = values;
-                let id = this.state.editQuestion.id;
 
-                // 富文本编辑器的内容
-                let answer = this.editorRef.current._getContent();
+            let {categoryID, title, content} = values;
+            let id = this.state.editQuestion.id;
 
-                // 判断是提交还是编辑操作
-                if (!id) { // 添加
-                    let res = await addQuestion(title, content,categoryID, answer);
-                    if (res.status === 0) {
-                        message.success('添加成功');
+            // 富文本编辑器的内容
+            let answer = this.editorRef.current._getContent();
+            console.log(answer);
 
-                        this.props.history.goBack();
-                    } else {
-                        message.error('添加失败');
-                    }
-                } else { // 编辑
-                    let res = await editQuestion(id, title, content,categoryID, answer);
-                    if (res.status === 0) {
-                        message.success('修改成功');
+            if (answer === '<p></p>') {
 
-                        this.props.history.goBack();
-                    } else {
-                        message.error('修改失败');
+                Modal.warning({
+                    title: '警告',
+                    content: '题目答案不能为空！',
+                    centered: true
+                });
+
+                return;
+
+            } else {
+                if (!err) {
+                    // 判断是提交还是编辑操作
+                    if (!id) { // 添加
+                        let res = await addQuestion(title, content,categoryID, answer);
+                        if (res.status === 0) {
+                            message.success('添加成功');
+
+                            this.props.history.goBack();
+                        } else {
+                            message.error('添加失败');
+                        }
+                    } else { // 编辑
+                        let res = await editQuestion(id, title, content,categoryID, answer);
+                        if (res.status === 0) {
+                            message.success('修改成功');
+
+                            this.props.history.goBack();
+                        } else {
+                            message.error('修改失败');
+                        }
                     }
                 }
             }
@@ -136,7 +150,7 @@ class OperationPanel extends Component {
             </Breadcrumb>
         );
 
-        console.log(editQuestion);
+        // console.log(editQuestion);
 
         return (
             <div>
@@ -188,12 +202,11 @@ class OperationPanel extends Component {
                         </Form.Item>
                         <Form.Item label='题目答案' wrapperCol={{sm: { span: 14 }}}>
                             {
-                                getFieldDecorator('answer', {
-                                    rules: [
-                                        {required: true, message: '此项必须填写'}
-                                    ],
+                                getFieldDecorator('answer',
+                                    {
                                     initialValue: (editQuestion && editQuestion.answer) || ''
-                                })(
+                                    }
+                                )(
                                     <EditorR ref={this.editorRef} />
                                 )
                             }
