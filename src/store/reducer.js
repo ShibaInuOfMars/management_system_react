@@ -1,7 +1,7 @@
 import {REQ_QUESTION_MSG} from './actionType';
 
 const defaultState = {
-    quetiosn_msg: []
+    question_msg: []
 };
 
 export default (state = defaultState, action) => {
@@ -9,7 +9,7 @@ export default (state = defaultState, action) => {
         // 先拷贝一份状态
         let newState = JSON.parse(JSON.stringify(state));
 
-        newState.quetiosn_msg = action.quetiosn_msg;
+        newState.question_msg = action.question_msg;
 
         return newState;
     }

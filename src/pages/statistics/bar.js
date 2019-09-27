@@ -4,19 +4,26 @@ import {Card, Breadcrumb} from 'antd';
 
 import ReactEcharts from 'echarts-for-react';
 
-import {questionMsg} from './../../api/question-api';
+import store from "../../store";
+
+// import {questionMsg} from './../../api/question-api';
 
 export default class Bar extends Component {
 
-    state = {
+    /*state = {
         questionInfo : []
-    };
+    };*/
 
     componentDidMount() {
-        this._questionMsg();
+        // this._questionMsg();
+
+        // 订阅数据更新
+        store.subscribe(() => {
+            this.forceUpdate();
+        });
     }
 
-    _questionMsg = async () => {
+    /*_questionMsg = async () => {
         let res = await questionMsg();
         // console.log(res);
         if (res.status === 0) {
@@ -24,20 +31,6 @@ export default class Bar extends Component {
                 questionInfo: res.data
             });
         }
-    };
-
-    /*option = {
-        xAxis: {
-            type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-        },
-        yAxis: {
-            type: 'value'
-        },
-        series: [{
-            data: [120, 200, 150, 80, 70, 110, 130],
-            type: 'bar'
-        }]
     };*/
 
     getOption = (data) => {
@@ -58,7 +51,10 @@ export default class Bar extends Component {
 
     render() {
 
-        const {questionInfo} = this.state;
+        // const {questionInfo} = this.state;
+
+        let data = store.getState().question_msg;
+        // console.log(data);
 
         const title = (
             <Breadcrumb>
@@ -70,7 +66,7 @@ export default class Bar extends Component {
         return (
             <div>
                 <Card title={title}>
-                    <ReactEcharts option={this.getOption(questionInfo)} />
+                    <ReactEcharts option={this.getOption(data)} />
                 </Card>
             </div>
         );

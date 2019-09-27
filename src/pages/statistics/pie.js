@@ -4,19 +4,25 @@ import {Card, Breadcrumb} from 'antd';
 
 import ReactEcharts from 'echarts-for-react';
 
-import {questionMsg} from './../../api/question-api';
+// import {questionMsg} from './../../api/question-api';
+
+import store from './../../store/index';
 
 export default class Pie extends Component {
 
     state = {
-        questionInfo : []
+        // questionInfo : []
     };
 
     componentDidMount() {
-        this._questionMsg();
+        // this._questionMsg();
+
+        store.subscribe(() => {
+            this.forceUpdate();
+        });
     }
 
-    _questionMsg = async () => {
+    /*_questionMsg = async () => {
         let res = await questionMsg();
         // console.log(res);
         if (res.status === 0) {
@@ -24,7 +30,7 @@ export default class Pie extends Component {
                 questionInfo: res.data
             });
         }
-    };
+    };*/
 
     getOption = (data) => {
         return  {
@@ -72,7 +78,9 @@ export default class Pie extends Component {
 
     render() {
 
-        const {questionInfo} = this.state;
+        // const {questionInfo} = this.state;
+
+        let data = store.getState().question_msg;
 
         const title = (
             <Breadcrumb>
@@ -84,7 +92,7 @@ export default class Pie extends Component {
         return (
             <div>
                 <Card title={title}>
-                    <ReactEcharts option={this.getOption(questionInfo)} />
+                    <ReactEcharts option={this.getOption(data)} />
                 </Card>
             </div>
         );
