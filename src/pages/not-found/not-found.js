@@ -2,8 +2,6 @@ import React, {Component} from 'react';
 import {Button} from 'antd';
 import './not-found.less';
 
-import {publishMenu} from './../../api/sider-api';
-
 export default class NotFound extends Component {
 
     _backHome = () => {
