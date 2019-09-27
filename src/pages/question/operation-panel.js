@@ -4,12 +4,21 @@ import {getAllCourse} from  './../../api/sider-api';
 
 import {addQuestion, editQuestion} from './../../api/question-api';
 
+import Editor from './editor';
+
 import {Card, Breadcrumb, Button, Form, Input, Select, message} from 'antd';
 const {Item} = Breadcrumb;
 const {TextArea} = Input;
 const {Option} = Select;
 
 class OperationPanel extends Component {
+
+    constructor(props) {
+        super(props);
+
+        this.editorRef = React.createRef();
+    }
+
 
     state = {
         currentCourse: {},
@@ -54,8 +63,11 @@ class OperationPanel extends Component {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll(async (err, values) => {
             if (!err) {
-                let {categoryID, title, content, answer} = values;
+                let {categoryID, title, content} = values;
                 let id = this.state.editQuestion.id;
+
+                // 富文本编辑器的内容
+                let answer = this.editorRef.current._getContent();
 
                 // 判断是提交还是编辑操作
                 if (!id) { // 添加
@@ -162,7 +174,7 @@ class OperationPanel extends Component {
                             {
                                 getFieldDecorator('content', {
                                     rules: [
-                                        {required: true, message: '此项必须选择一个'}
+                                        {required: true, message: '此项必须填写'}
                                     ],
                                     initialValue: editQuestion.content || ''
                                 })(
@@ -170,15 +182,16 @@ class OperationPanel extends Component {
                                 )
                             }
                         </Form.Item>
-                        <Form.Item label='题目答案'>
+                        <Form.Item label='题目答案' wrapperCol={{sm: { span: 14 }}}>
                             {
                                 getFieldDecorator('answer', {
                                     rules: [
-                                        {required: true, message: '此项必须选择一个'}
+                                        {required: true, message: '此项必须填写'}
                                     ],
                                     initialValue: editQuestion.answer || ''
                                 })(
-                                    <TextArea  placeholder='请填写题目答案' />
+                                    // 非表单组件，则默认值会在自动定义组件的props的value中
+                                    <Editor ref={this.editorRef} />
                                 )
                             }
                         </Form.Item>
