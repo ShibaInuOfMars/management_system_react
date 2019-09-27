@@ -4,11 +4,13 @@ import {Card, Breadcrumb} from 'antd';
 
 import ReactEcharts from 'echarts-for-react';
 
-import store from "../../store";
-
 // import {questionMsg} from './../../api/question-api';
 
-export default class Bar extends Component {
+// import store from "../../store";
+
+import {connect} from 'react-redux';
+
+class Bar extends Component {
 
     /*state = {
         questionInfo : []
@@ -18,9 +20,9 @@ export default class Bar extends Component {
         // this._questionMsg();
 
         // 订阅数据更新
-        store.subscribe(() => {
+        /*store.subscribe(() => {
             this.forceUpdate();
-        });
+        });*/
     }
 
     /*_questionMsg = async () => {
@@ -53,8 +55,10 @@ export default class Bar extends Component {
 
         // const {questionInfo} = this.state;
 
-        let data = store.getState().question_msg;
+        // let data = store.getState().question_msg;
         // console.log(data);
+
+        let data = this.props.question_msg;
 
         const title = (
             <Breadcrumb>
@@ -72,3 +76,11 @@ export default class Bar extends Component {
         );
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        question_msg: state.question_msg
+    };
+};
+
+export default connect(mapStateToProps, null)(Bar);

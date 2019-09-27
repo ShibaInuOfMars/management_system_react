@@ -6,9 +6,11 @@ import ReactEcharts from 'echarts-for-react';
 
 // import {questionMsg} from './../../api/question-api';
 
-import store from './../../store/index';
+// import store from './../../store/index';
 
-export default class Line extends Component {
+import {connect} from 'react-redux';
+
+class Line extends Component {
 
     /*state = {
         questionInfo : []
@@ -17,9 +19,9 @@ export default class Line extends Component {
     componentDidMount() {
         // this._questionMsg();
 
-        store.subscribe(() => {
+        /*store.subscribe(() => {
             this.forceUpdate();
-        });
+        });*/
     }
 
     /*_questionMsg = async () => {
@@ -52,7 +54,9 @@ export default class Line extends Component {
 
         // const {questionInfo} = this.state;
 
-        let data = store.getState().question_msg;
+        // let data = store.getState().question_msg;
+
+        let data = this.props.question_msg;
 
         const title = (
             <Breadcrumb>
@@ -70,3 +74,11 @@ export default class Line extends Component {
         );
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        question_msg: state.question_msg
+    };
+};
+
+export default connect(mapStateToProps, null)(Line);
