@@ -49,7 +49,7 @@ export default class QuestionList extends Component {
                     <span>
                         <Button onClick={() => this._showAnswer(record)}>查看答案</Button>
                         <Divider type="vertical"/>
-                        <Button>编辑</Button>
+                        <Button onClick={() => this._jumpToEdit(this.state.currentCategoryDetail, record)}>编辑</Button>
                         <Divider type="vertical"/>
                         <Popconfirm title="确定要删除吗？" okText="删除" cancelText="取消" okType="danger" onConfirm={() => this._deleteQuestion(record)}>
                             <Button type="danger">删除</Button>
@@ -139,6 +139,16 @@ export default class QuestionList extends Component {
         }
     };
 
+    // 跳转到添加界面
+    _jumpToAdd(currentCourse) {
+        this.props.history.push('/question/operationPanel', {currentCourse})
+    }
+
+    // 跳转到编辑界面
+    _jumpToEdit(currentCourse, editQuestion) {
+        this.props.history.push('/question/operationPanel', {currentCourse, editQuestion})
+    }
+
     render() {
 
         const {currentCategoryDetail, dataSource, isLoading, pageSize, totalSize} = this.state;
@@ -147,7 +157,7 @@ export default class QuestionList extends Component {
             <div>
                 <Card
                     title={currentCategoryDetail.title}
-                    extra={<Button type='primary'>添加</Button>}
+                    extra={<Button type='primary' onClick={() => this._jumpToAdd(currentCategoryDetail)}>添加</Button>}
                 >
                     <Table
                         dataSource={dataSource}
