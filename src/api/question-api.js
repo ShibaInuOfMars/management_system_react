@@ -21,3 +21,22 @@ export const delQuesiotn = (id) => {
         id
     }, 'post');
 };
+
+export const addQuestion = (title, content, categoryID, answer) => {
+    return ajax(BASE_URL + '/addQuestion', {
+        title,
+        content,
+        categoryID,
+        answer
+    }, 'post');
+};
+
+export const editQuestion = (id, title, content, categoryID, answer) => {
+    return ajax(BASE_URL + '/updateQuestion', {
+        id,
+        title,
+        content,
+        categoryID,
+        answer
+    }, 'post');
+};
